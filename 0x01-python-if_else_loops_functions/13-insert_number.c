@@ -1,49 +1,56 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include <string.h>
 #include "lists.h"
-#include <stddef.h>
-#include <stdlib.h>
 
 /**
- * insert_node - function that inserts a number to a singly linked list.
- * @head: pointer to pointer to head of the list.
- * @number: value of the node to insert.
+ * insert_node - insert node in a linked list
  *
- * Return: the address of the new node, or NULL if it failed.
+ * @head: pointer to the first node of the linked list
+ *
+ * @number: integer value of the new node to insert
+ *
+ * Return: the head of the linked list with the new node inserted
  */
-
 listint_t *insert_node(listint_t **head, int number)
 {
-	listint_t *new_node, *traverse;
-	unsigned int idx = 0, i = 0;
-	/* if there is no list return null */
-	if (head == NULL)
-		return (NULL);
-	/* create the new node */
-	new_node = malloc(sizeof(listint_t));
-	if (new_node == NULL)
-		return (NULL);
-	/* access the n field of the new_node and initialize it as n */
-	new_node->n = number;
-	/* check if idx = 0 */
-	if (idx == 0)
-	{
-		/* access the next field of new_node and assign it as first node */
-		new_node->next = *head;
-		*head = new_node;
-		return (new_node);
-	}
-	/* make traverse be the value at head */
-	traverse = *head;
-	while (i != idx - 1 && traverse != NULL)
-	{
-		traverse = traverse->next;
-		i++;
-	}
+	listint_t *new_head = malloc(sizeof(listint_t));
+	listint_t *tmp = *head;
 
-	if (i == idx - 1 && traverse != NULL)
+	if (new_head == NULL)
 	{
-		new_node->next = traverse->next;
-		traverse->next = new_node;
-		return (new_node);
+		return (NULL);
 	}
-	return (NULL);
+	if (tmp == NULL)
+	{
+		new_head->n = number;
+		new_head->next = NULL;
+		(*head) = new_head;
+		return (new_head);
+	}
+	if (tmp->next == NULL || number == 0)
+	{
+		if (number < tmp->n)
+		{
+			new_head->n = number;
+			new_head->next = tmp;
+			(*head) = new_head;
+			return (new_head);
+		}
+	}
+	while (tmp->next)
+	{
+		if ((number >= tmp->n) && (number <= tmp->next->n))
+		{
+			new_head->n = number;
+			new_head->next = tmp->next;
+			tmp->next = new_head;
+			return (new_head);
+		}
+		tmp = tmp->next;
+	}
+	new_head->n = number;
+	new_head->next = NULL;
+	tmp->next = new_head;
+	return (new_head);
 }
